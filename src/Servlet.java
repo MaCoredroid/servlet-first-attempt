@@ -1,5 +1,4 @@
-import com.google.gson.Gson;
-
+import com.google.gson.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,8 +31,9 @@ public class Servlet extends HttpServlet {
         list.add(new Book("Harry Potter", "J. K. Rowling",3000, "978-3-16-148410-0", 5, "./img/hp.jpg"));
         list.add(new Book("King of the Ring", "John Ronald Reuel Tolkien",5000, "‎178-3-16-148410-0", 9, "./img/ring.jpg"));
         list.add(new Book("The Three-Body Problem", "	Liu Cixin",4000, "‎278-3-16-148410-0", 7, "./img/tb.jpg"));
+        Book book1=new Book("Harry Potter", "J. K. Rowling",3000, "978-3-16-148410-0", 5, "./img/hp.jpg");
+        String json = new Gson().toJson(book1);
 
-        String json = new Gson().toJson(list);
 
 
         response.setContentType("application/json");
