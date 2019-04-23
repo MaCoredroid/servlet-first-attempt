@@ -1,4 +1,5 @@
-import com.google.gson.*;
+import com.google.gson.Gson;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -6,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +27,59 @@ public class Booklist extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         List<Book> list = new ArrayList<>();
+        // JDBC driver name and database URL
+       try{
+           final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+           final String DB_URL="jdbc:mysql://localhost/BOOK";
 
-        list.add(new Book("Harry Potter", "J. K. Rowling",3000, "978-3-16-148410-0", 5, "./img/hp.jpg"));
-        list.add(new Book("King of the Ring", "John Ronald Reuel Tolkien",5000, "‎178-3-16-148410-0", 9, "./img/ring.jpg"));
-        list.add(new Book("The Three-Body Problem", "Liu Cixin",4000, "‎278-3-16-148410-0", 7, "./img/tb.jpg"));
+           //  Database credentials
+           final String USER = "root";
+           final String PASS = "1224";
+           Connection conn=null;
+           Statement stmt=null;
+           Class.forName("com.mysql.jdbc.Driver");
+
+           // Open a connection
+           conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+           // Execute SQL query
+           stmt = conn.createStatement();
+           String sql;
+           sql = "SELECT name , author , price , isbn, stock, img FROM booklist";
+           ResultSet rs = stmt.executeQuery(sql);
+           while(rs.next()){
+               //Retrieve by column name
+               String name = rs.getString("name");
+               String author= rs.getString("author");
+               Double price= rs.getDouble("price");
+               String isbn=rs.getString("isbn");
+               int stock=rs.getInt("stock");
+               String img=rs.getString("img");
+               list.add(new Book(name, author , price , isbn, stock, img));
+
+
+
+
+
+           }
+
+
+           // Clean-up environment
+           rs.close();
+           stmt.close();
+           conn.close();
+       }catch(SQLException se) {
+           //Handle errors for JDBC
+           se.printStackTrace();
+       } catch(Exception e) {
+           //Handle errors for Class.forName
+           e.printStackTrace();
+       }
+
+
+
+
 
         String json = new Gson().toJson(list);
 
