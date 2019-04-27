@@ -33,6 +33,16 @@
         <url-pattern>/Order</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetImage</servlet-name>
+        <servlet-class>GetImage</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetImage</servlet-name>
+        <url-pattern>/getImage</url-pattern>
+    </servlet-mapping>
+
 
 
 </web-app>
