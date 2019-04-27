@@ -18,11 +18,11 @@ public class GetImage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String isbn = request.getParameter("isbn");
         response.setContentType("image/png");
 
         ServletContext sc = getServletContext();
-        InputStream is = sc.getResourceAsStream("/WEB-INF/img/hp.png");
+        InputStream is = sc.getResourceAsStream("/WEB-INF/img/"+isbn+".png");
 
         BufferedImage bi = ImageIO.read(is);
         OutputStream os = response.getOutputStream();
