@@ -34,13 +34,15 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>DatabaseAccess</servlet-name>
-        <servlet-class>DatabaseAccess</servlet-class>
+        <servlet-name>GetImage</servlet-name>
+        <servlet-class>GetImage</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>DatabaseAccess</servlet-name>
-        <url-pattern>/DatabaseAccess</url-pattern>
+        <servlet-name>GetImage</servlet-name>
+        <url-pattern>/getImage</url-pattern>
     </servlet-mapping>
+
+
 
 </web-app>
