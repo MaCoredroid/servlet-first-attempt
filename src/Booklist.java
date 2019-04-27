@@ -31,14 +31,14 @@ public class Booklist extends HttpServlet {
         // JDBC driver name and database URL
        try{
            final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-           final String DB_URL="jdbc:mysql://localhost/BOOK";
+           final String DB_URL="jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
 
            //  Database credentials
            final String USER = "root";
            final String PASS = "1224";
            Connection conn=null;
            Statement stmt=null;
-           Class.forName("com.mysql.jdbc.Driver");
+           Class.forName(JDBC_DRIVER);
 
            // Open a connection
            conn = DriverManager.getConnection(DB_URL, USER, PASS);
