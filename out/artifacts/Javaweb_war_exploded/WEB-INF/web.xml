@@ -53,6 +53,17 @@
         <url-pattern>/Checkuser</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>Login</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+
+
 
 
 </web-app>
