@@ -43,6 +43,27 @@
         <url-pattern>/getImage</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Checkuser</servlet-name>
+        <servlet-class>Checkuser</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Checkuser</servlet-name>
+        <url-pattern>/Checkuser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Login</servlet-name>
+        <servlet-class>Login</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Login</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+
+
 
 
 </web-app>
