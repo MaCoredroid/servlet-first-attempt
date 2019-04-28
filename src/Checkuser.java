@@ -57,7 +57,7 @@ public class Checkuser extends HttpServlet {
             e.printStackTrace();
         }
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "86400");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -139,11 +139,13 @@ public class Checkuser extends HttpServlet {
             e.printStackTrace();
         }
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "86400");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
+        PrintWriter out = response.getWriter();
+        out.print("TRUE");
+        out.flush();
 
 
 
