@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -95,12 +94,12 @@ public class Cart extends HttpServlet {
             // Execute SQL query
             stmt = conn.createStatement();
             String sql="";
-            Iterator<info> iter = isbnlist.iterator();
-            while(iter.hasNext())
+
+            for(info temp : isbnlist)
             {
                 sql = "SELECT name , author , price , isbn, stock, img FROM booklist WHERE isbn = ?";
                 preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setString(1, iter.next().isbn);
+                preparedStatement.setString(1, temp.isbn);
                 rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
@@ -111,12 +110,12 @@ public class Cart extends HttpServlet {
                     Double price = rs.getDouble("price");
                     String isbn = rs.getString("isbn");
                     String img = rs.getString("img");
-                    int stock=iter.next().number;
+                    int stock=temp.number;
                     list.add(new Book(name, author, price, isbn, stock, img));
                 }
             }
             // Clean-up environment
-            rs.close();
+
             stmt.close();
             conn.close();
         }catch(SQLException se) {
