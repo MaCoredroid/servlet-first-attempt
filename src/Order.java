@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,63 +31,123 @@ public class Order extends HttpServlet {
         List<info> isbnlist = new ArrayList<>();
         List<Book> list = new ArrayList<>();
         // JDBC driver name and database URL
+
         String username = request.getParameter("username");
-        try
+        String flag= request.getParameter("flag");
+        if(flag.equals("FALSE"))
         {
-            final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-            final String DB_URL="jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
+            try {
+                final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+                final String DB_URL = "jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
 
-            //  Database credentials
-            final String USER = "root";
-            final String PASS = "1224";
-            Connection conn=null;
-            Statement stmt=null;
-            Class.forName(JDBC_DRIVER);
-            ResultSet rs=null;
+                //  Database credentials
+                final String USER = "root";
+                final String PASS = "1224";
+                Connection conn = null;
+                Statement stmt = null;
+                Class.forName(JDBC_DRIVER);
+                ResultSet rs = null;
 
-            // Open a connection
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            PreparedStatement preparedStatement = null;
+                // Open a connection
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                PreparedStatement preparedStatement = null;
 
-            // Execute SQL query
-            stmt = conn.createStatement();
-            String sql="";
+                // Execute SQL query
+                stmt = conn.createStatement();
+                String sql = "";
 
-            sql = "SELECT isbn,number FROM orders WHERE username = ?";
-            preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1,username);
-            rs = preparedStatement.executeQuery();
+                sql = "SELECT isbn,number FROM orders WHERE username = ?";
+                preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, username);
+                rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
-                //Retrieve by column name
+                while (rs.next()) {
+                    //Retrieve by column name
 
-                String isbn = rs.getString("isbn");
-                int number=rs.getInt("number");
-                isbnlist.add(new info(isbn,number));
+                    String isbn = rs.getString("isbn");
+                    int number = rs.getInt("number");
+                    isbnlist.add(new info(isbn, number));
+                }
+                // Clean-up environment
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            } catch (Exception e) {
+                //Handle errors for Class.forName
+                e.printStackTrace();
             }
-            // Clean-up environment
-            rs.close();
-            stmt.close();
-            conn.close();
-        }catch(SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } catch(Exception e) {
-            //Handle errors for Class.forName
-            e.printStackTrace();
+
         }
-        try
+        else
         {
+            long startdate = Long.parseLong(request.getParameter("start"));
+            long enddate= Long.parseLong(request.getParameter("end"));
+            try {
+                final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+                final String DB_URL = "jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
+
+                //  Database credentials
+                final String USER = "root";
+                final String PASS = "1224";
+                Connection conn = null;
+                Statement stmt = null;
+                Class.forName(JDBC_DRIVER);
+                ResultSet rs = null;
+
+                // Open a connection
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                PreparedStatement preparedStatement = null;
+
+                // Execute SQL query
+                stmt = conn.createStatement();
+                String sql = "";
+
+                sql = "SELECT isbn,number,time FROM orders WHERE username = ?";
+                preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, username);
+                rs = preparedStatement.executeQuery();
+
+                while (rs.next()) {
+                    //Retrieve by column name
+                    String tempdate=rs.getString("time");
+                    Long temp=Long.parseLong(tempdate);
+                    System.out.print("temp"+temp);
+                    System.out.print("startdate"+startdate);
+                    System.out.print("enddate"+enddate);
+                    if((temp>startdate) && (temp <enddate))
+                    {
+                        String isbn = rs.getString("isbn");
+                        int number = rs.getInt("number");
+                        isbnlist.add(new info(isbn, number));
+                    }
+                }
+                // Clean-up environment
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                se.printStackTrace();
+            } catch (Exception e) {
+                //Handle errors for Class.forName
+                e.printStackTrace();
+            }
+
+        }
+        try {
             final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-            final String DB_URL="jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
+            final String DB_URL = "jdbc:mysql://localhost/BOOK?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false";
 
             //  Database credentials
             final String USER = "root";
             final String PASS = "1224";
-            Connection conn=null;
-            Statement stmt=null;
+            Connection conn = null;
+            Statement stmt = null;
             Class.forName(JDBC_DRIVER);
-            ResultSet rs=null;
+            ResultSet rs = null;
 
             // Open a connection
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -93,10 +155,9 @@ public class Order extends HttpServlet {
 
             // Execute SQL query
             stmt = conn.createStatement();
-            String sql="";
+            String sql = "";
 
-            for(info temp : isbnlist)
-            {
+            for (info temp : isbnlist) {
                 sql = "SELECT name , author , price , isbn, stock, img FROM booklist WHERE isbn = ?";
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, temp.isbn);
@@ -110,7 +171,7 @@ public class Order extends HttpServlet {
                     Double price = rs.getDouble("price");
                     String isbn = rs.getString("isbn");
                     String img = rs.getString("img");
-                    int stock=temp.number;
+                    int stock = temp.number;
                     list.add(new Book(name, author, price, isbn, stock, img));
                 }
             }
@@ -118,20 +179,15 @@ public class Order extends HttpServlet {
 
             stmt.close();
             conn.close();
-        }catch(SQLException se) {
+        } catch (SQLException se) {
             //Handle errors for JDBC
             se.printStackTrace();
-        } catch(Exception e) {
+        } catch (Exception e) {
             //Handle errors for Class.forName
             e.printStackTrace();
         }
 
-
-
-
-
         String json = new Gson().toJson(list);
-
 
 
         response.setContentType("application/json");
@@ -143,6 +199,7 @@ public class Order extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.print(json);
         out.flush();
+
     }
 
     @Override
@@ -273,15 +330,17 @@ public class Order extends HttpServlet {
                 else
                 {
 
-
+                    Date date = Calendar.getInstance().getTime();
+                    String strDate=Long.toString(date.getTime());
                     String sql = "";
                     sql = "INSERT INTO orders"
-                            + "(username, isbn, number) VALUES"
-                            + "(?,?,?)";
+                            + "(username, isbn, number,time) VALUES"
+                            + "(?,?,?,?)";
                     preparedStatement1 = conn1.prepareStatement(sql);
                     preparedStatement1.setString(1, username);
                     preparedStatement1.setString(2, isbn);
                     preparedStatement1.setInt(3, number);
+                    preparedStatement1.setString(4, strDate);
                     preparedStatement1.executeUpdate();
                 }
 
