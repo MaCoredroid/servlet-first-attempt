@@ -219,7 +219,7 @@ public class Cart extends HttpServlet {
             preparedStatement.close();
             rs.close();
 
-            int leftstock = stock-number;
+
             if (stock < number)
             {
 
@@ -228,8 +228,6 @@ public class Cart extends HttpServlet {
                 conn2.close();
 
 
-                preparedStatement1.close();
-                preparedStatement2.close();
 
                 response.setCharacterEncoding("UTF-8");
                 response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -258,16 +256,42 @@ public class Cart extends HttpServlet {
                     conn3.close();
                     preparedStatement3.close();
 
+                    int temp=number+originnumber;
+
+
                     if(duplicate!=0)
                     {
-                        int temp=number+originnumber;
-                        String sql = "";
-                        sql = "UPDATE cart SET number=? where username=? AND isbn=?";
-                        preparedStatement1 = conn1.prepareStatement(sql);
-                        preparedStatement1.setInt(1, temp);
-                        preparedStatement1.setString(2, username);
-                        preparedStatement1.setString(3, isbn);
-                        preparedStatement1.executeUpdate();
+                        if(temp >0) {
+                            String sql = "";
+                            sql = "UPDATE cart SET number=? where username=? AND isbn=?";
+                            preparedStatement1 = conn1.prepareStatement(sql);
+                            preparedStatement1.setInt(1, temp);
+                            preparedStatement1.setString(2, username);
+                            preparedStatement1.setString(3, isbn);
+                            preparedStatement1.executeUpdate();
+                        }
+                        if(temp==0)
+                        {
+                            String sql = "";
+                            sql = "DELETE FROM cart where username=? AND isbn=?";
+                            preparedStatement1 = conn1.prepareStatement(sql);
+
+                            preparedStatement1.setString(1, username);
+                            preparedStatement1.setString(2, isbn);
+                            preparedStatement1.executeUpdate();
+                        }
+                        if(temp <0)
+                        {
+                            response.setCharacterEncoding("UTF-8");
+                            response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+                            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+                            response.setHeader("Access-Control-Max-Age", "86400");
+                            response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                            PrintWriter out = response.getWriter();
+                            out.print("TRUE");
+                            out.flush();
+                            return;
+                        }
                     }
 
                     else
@@ -287,18 +311,13 @@ public class Cart extends HttpServlet {
 
 
 
-                    String sqlma = "";
-                    sqlma = "UPDATE booklist SET stock = ? WHERE isbn = ?";
-                    preparedStatement2 = conn2.prepareStatement(sqlma);
-                    preparedStatement2.setInt(1, leftstock);
-                    preparedStatement2.setString(2, isbn);
-                    preparedStatement2.executeUpdate();
+
 
                     conn1.close();
                     conn2.close();
 
                     preparedStatement1.close();
-                    preparedStatement2.close();
+
 
                     response.setCharacterEncoding("UTF-8");
                     response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
