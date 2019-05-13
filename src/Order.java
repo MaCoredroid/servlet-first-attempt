@@ -245,6 +245,7 @@ public class Order extends HttpServlet {
             Connection conn1 = null;
             Connection conn2 = null;
             Connection conn3 = null;
+            Connection conn4 = null;
 
 
 
@@ -256,11 +257,13 @@ public class Order extends HttpServlet {
             conn1 = DriverManager.getConnection(DB_URL, USER, PASS);
             conn2 = DriverManager.getConnection(DB_URL, USER, PASS);
             conn3 = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn4 = DriverManager.getConnection(DB_URL, USER, PASS);
 
             PreparedStatement preparedStatement = null;
             PreparedStatement preparedStatement1 = null;
             PreparedStatement preparedStatement2 = null;
             PreparedStatement preparedStatement3 = null;
+            PreparedStatement preparedStatement4 = null;
 
 
             // Execute SQL query
